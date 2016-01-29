@@ -1,11 +1,48 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+
+class Data{
+	final static int MAX=100;
+	static String devices[]={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
+	static String[] status={"Brightness","ON","OFF"};
+	static int seldevice_index[]=new int[MAX];
+	
+	static String setrule_str[]=new String[MAX];
+	static String setrule;
+	static int cnt_rule=0;
+	
+	static String setspe_str[]=new String[MAX];
+	static String setspe;
+	static int cnt_spe=0;
+	
+	static String selrule_str[]=new String[MAX];
+	static String selrule;
+	static int cnt_sel_rule=0;
+	
+	static String selspe_str[]=new String[MAX];
+	static String selspe;
+	static int cnt_sel_spe=0;
+	
+	public void init(){
+		for (int i=0;i<MAX;i++){
+			seldevice_index[i]=0;
+		}
+	}
+	Data(){
+		init();
+		;
+	}
+}
 
 class AModel extends DefaultComboBoxModel{
 	AModel(String[] s){
@@ -15,6 +52,12 @@ class AModel extends DefaultComboBoxModel{
 }
 
 class DevicesSelected extends JFrame{
+	JRadioButton jr1;
+	JRadioButton jr2;
+	JRadioButton jr3;
+	JRadioButton jr4;
+	JRadioButton jr5;
+	JRadioButton jr6;
 	public DevicesSelected(){
 		init();
 	}
@@ -46,12 +89,12 @@ class DevicesSelected extends JFrame{
 		constraints.weightx=4;
 		constraints.weighty=6;
 		
-		JRadioButton jr1=new JRadioButton("Air Conditioner");
-		JRadioButton jr2=new JRadioButton("Fridge");
-		JRadioButton jr3=new JRadioButton("Light");
-		JRadioButton jr4=new JRadioButton("Fan");
-		JRadioButton jr5=new JRadioButton("Water heater");
-		JRadioButton jr6=new JRadioButton("Warmer");
+		jr1=new JRadioButton("Air Conditioner");
+		jr2=new JRadioButton("Fridge");
+		jr3=new JRadioButton("Light");
+		jr4=new JRadioButton("Fan");
+		jr5=new JRadioButton("Water heater");
+		jr6=new JRadioButton("Warmer");
 
 		add(jr1,constraints,0,1,1,1);
 		add(jr2,constraints,1,1,1,1);
@@ -65,6 +108,38 @@ class DevicesSelected extends JFrame{
 			public void actionPerformed(ActionEvent Event){
 				int i=JOptionPane.showConfirmDialog(null,"Please confirm your choices again!","Exit confirmation dialog box",JOptionPane.YES_NO_CANCEL_OPTION);
 				if (i==0){
+//TODO Save the selected devices
+					int cnt=0;
+					if (jr1.isSelected()){
+						Data.seldevice_index[cnt]=1;
+						System.out.println(jr1.getText());
+					}
+					cnt++;
+					if (jr2.isSelected()){
+						Data.seldevice_index[cnt]=1;
+						System.out.println(jr2.getText());
+					}
+					cnt++;
+					if (jr3.isSelected()){
+						Data.seldevice_index[cnt]=1;
+						System.out.println(jr3.getText());
+					}
+					cnt++;
+					if (jr4.isSelected()){
+						Data.seldevice_index[cnt]=1;
+						System.out.println(jr4.getText());
+					}
+					cnt++;
+					if (jr5.isSelected()){
+						Data.seldevice_index[cnt]=1;
+						System.out.println(jr5.getText());
+					}
+					cnt++;
+					if (jr6.isSelected()){
+						Data.seldevice_index[cnt]=1;
+						System.out.println(jr6.getText());
+					}
+					
 					disappear();
 					setDefaultCloseOperation();
 				}
@@ -87,9 +162,53 @@ class DevicesSelected extends JFrame{
 	}
 }
 
-class RulesSelected extends JFrame{
+class RulesSelected extends JFrame implements ItemListener{
+	JComboBox combo2;
+	JComboBox combo3;
+	JComboBox combo4;
+	JComboBox combo5;
+	String A_dev;
+	String A_condi;
+	String B_dev;
+	String B_act;
+//	String[] devices={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
+//	String[] status={"Brightness","ON","OFF"};
+	
+	public void itemStateChanged(ItemEvent e){
+		if (e.getStateChange()==ItemEvent.SELECTED){
+//			System.out.print("IF"+" ");
+			for (int i=0;i<Data.devices.length;i++){
+				if (combo2.getSelectedItem()==Data.devices[i]){
+					A_dev=Data.devices[i];
+//					System.out.print(Data.devices[i]+".");
+				}
+			}
+			for (int i=0;i<Data.status.length;i++){
+				if (combo3.getSelectedItem()==Data.status[i]){
+					A_condi=Data.status[i];
+//					System.out.print(Data.status[i]+" ");
+				}
+			}
+//			System.out.print("THEN"+" ");
+			for (int i=0;i<Data.devices.length;i++){
+				if (combo4.getSelectedItem()==Data.devices[i]){
+					B_dev=Data.devices[i];
+//					System.out.print(Data.devices[i]+".");
+				}
+			}
+			for (int i=0;i<Data.status.length;i++){
+				if (combo5.getSelectedItem()==Data.status[i]){
+					B_act=Data.status[i];
+//					System.out.println(Data.status[i]);
+				}
+			}
+		}
+	}
+	
 	public RulesSelected(){
 		init();
+//		System.out.println("123");
+//		System.out.println("setrule: "+Data.setrule);
 	}
 	
 	public void add(Component c,GridBagConstraints constraints,int x,int y,int w,int h){
@@ -119,19 +238,24 @@ class RulesSelected extends JFrame{
 		constraints.weightx=8;
 		constraints.weighty=3;
 		
-		String[] devices={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
-		String[] status={"Brightness","ON","OFF"};
+		
 		JLabel iflabel=new JLabel("IF");
 		JLabel thenlabel=new JLabel("THEN");
-		ComboBoxModel mode2=new AModel(devices);
-		JComboBox combo2=new JComboBox(mode2);
-		ComboBoxModel mode3=new AModel(status);
-		JComboBox combo3=new JComboBox(mode3);
-		ComboBoxModel mode4=new AModel(devices);
-		JComboBox combo4=new JComboBox(mode4);
-		ComboBoxModel mode5=new AModel(status);
-		JComboBox combo5=new JComboBox(mode5);
-
+		ComboBoxModel mode2=new AModel(Data.devices);
+		combo2=new JComboBox(mode2);
+		combo2.addItemListener(this);
+		
+		ComboBoxModel mode3=new AModel(Data.status);
+		combo3=new JComboBox(mode3);
+		combo3.addItemListener(this);
+		
+		ComboBoxModel mode4=new AModel(Data.devices);
+		combo4=new JComboBox(mode4);
+		combo4.addItemListener(this);
+		
+		ComboBoxModel mode5=new AModel(Data.status);
+		combo5=new JComboBox(mode5);
+		combo5.addItemListener(this);
 		
 		add(iflabel,constraints,0,1,1,1);
 		add(combo2,constraints,1,1,1,1);
@@ -145,6 +269,9 @@ class RulesSelected extends JFrame{
 			public void actionPerformed(ActionEvent Event){
 				int i=JOptionPane.showConfirmDialog(null,"Please confirm your choices again!","Exit confirmation dialog box",JOptionPane.YES_NO_CANCEL_OPTION);
 				if (i==0){
+					System.out.println('\n'+"IF "+A_dev+"."+A_condi+" THEN "+B_dev+"."+B_act);
+					Data.setrule="IF "+A_dev+"."+A_condi+" THEN "+B_dev+"."+B_act;
+//					System.out.println("setrule: "+Data.setrule);
 					disappear();
 					setDefaultCloseOperation();
 				}
@@ -168,9 +295,51 @@ class RulesSelected extends JFrame{
 }
 
 
-class SpecificationSelected extends JFrame{
+class SpecificationSelected extends JFrame implements ItemListener{
+	JComboBox combo2;
+	JComboBox combo3;
+	JComboBox combo4;
+	JComboBox combo5;
+	String A_dev;
+	String A_condi;
+	String B_dev;
+	String B_act;
+//	String[] devices={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
+//	String[] status={"Brightness","ON","OFF"};
+	
 	public SpecificationSelected(){
 		init();
+	}
+	
+	public void itemStateChanged(ItemEvent e){
+		if (e.getStateChange()==ItemEvent.SELECTED){
+//			System.out.print("IF"+" ");
+			for (int i=0;i<Data.devices.length;i++){
+				if (combo2.getSelectedItem()==Data.devices[i]){
+					A_dev=Data.devices[i];
+//					System.out.print(Data.devices[i]+".");
+				}
+			}
+			for (int i=0;i<Data.status.length;i++){
+				if (combo3.getSelectedItem()==Data.status[i]){
+					A_condi=Data.status[i];
+//					System.out.print(Data.status[i]+" ");
+				}
+			}
+			System.out.print("THEN"+" ");
+			for (int i=0;i<Data.devices.length;i++){
+				if (combo4.getSelectedItem()==Data.devices[i]){
+					B_dev=Data.devices[i];
+//					System.out.print(Data.devices[i]+".");
+				}
+			}
+			for (int i=0;i<Data.status.length;i++){
+				if (combo5.getSelectedItem()==Data.status[i]){
+					B_act=Data.status[i];
+//					System.out.println(Data.status[i]);
+				}
+			}
+		}
 	}
 	
 	public void add(Component c,GridBagConstraints constraints,int x,int y,int w,int h){
@@ -200,19 +369,23 @@ class SpecificationSelected extends JFrame{
 		constraints.weightx=8;
 		constraints.weighty=3;
 		
-		String[] devices={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
-		String[] status={"Brightness","ON","OFF"};
 		JLabel iflabel=new JLabel("IF");
 		JLabel thenlabel=new JLabel("THEN");
-		ComboBoxModel mode2=new AModel(devices);
-		JComboBox combo2=new JComboBox(mode2);
-		ComboBoxModel mode3=new AModel(status);
-		JComboBox combo3=new JComboBox(mode3);
-		ComboBoxModel mode4=new AModel(devices);
-		JComboBox combo4=new JComboBox(mode4);
-		ComboBoxModel mode5=new AModel(status);
-		JComboBox combo5=new JComboBox(mode5);
-
+		ComboBoxModel mode2=new AModel(Data.devices);
+		combo2=new JComboBox(mode2);
+		combo2.addItemListener(this);
+		
+		ComboBoxModel mode3=new AModel(Data.status);
+		combo3=new JComboBox(mode3);
+		combo3.addItemListener(this);
+		
+		ComboBoxModel mode4=new AModel(Data.devices);
+		combo4=new JComboBox(mode4);
+		combo4.addItemListener(this);
+		
+		ComboBoxModel mode5=new AModel(Data.status);
+		combo5=new JComboBox(mode5);
+		combo5.addItemListener(this);
 		
 		add(iflabel,constraints,0,1,1,1);
 		add(combo2,constraints,1,1,1,1);
@@ -226,6 +399,8 @@ class SpecificationSelected extends JFrame{
 			public void actionPerformed(ActionEvent Event){
 				int i=JOptionPane.showConfirmDialog(null,"Please confirm your choices again!","Exit confirmation dialog box",JOptionPane.YES_NO_CANCEL_OPTION);
 				if (i==0){
+					System.out.println('\n'+"IF "+A_dev+"."+A_condi+" THEN "+B_dev+"."+B_act);
+					Data.setspe="IF "+A_dev+"."+A_condi+" THEN "+B_dev+"."+B_act;
 					disappear();
 					setDefaultCloseOperation();
 				}
@@ -251,13 +426,18 @@ class SpecificationSelected extends JFrame{
 class RuleList extends MouseAdapter {
 	JList list=null;
 	DefaultListModel model=null;
-	String[] s={"IF Fridge.Status On THEN Light.Status Off.","C","C++","C#","Pathon","1","2","3","4","5"};
+//	String[] s={"IF Fridge.Status On THEN Light.Status Off.","C","C++","C#","Pathon","1","2","3","4","5"};
 	
 	class DataModel extends DefaultListModel{
 		DataModel(int flag){
-			if (flag==1)
-				for (int i=0;i<s.length;i++)
-					addElement(s[i]);
+			if (flag==1){
+				for (int i=0;i<Data.cnt_rule;i++)
+					addElement(Data.setrule_str[i]);
+				if ((Data.cnt_rule==0 && Data.setrule!=Data.setrule_str[0])||(Data.cnt_rule!=0 && Data.setrule!=Data.setrule_str[Data.cnt_rule-1])){
+					addElement(Data.setrule);
+					Data.setrule_str[Data.cnt_rule++]=Data.setrule;
+				}
+			}
 		}
 	}
 	
@@ -311,13 +491,16 @@ class RuleList extends MouseAdapter {
 class DeviceList extends MouseAdapter {
 	JList list=null;
 	DefaultListModel model=null;
-	String[] s={"Fridge","Light","Air Conditioner","Door","Warmer","Fan","Computer","Window","Alarm","Heater"};
+//	String[] s={"Fridge","Light","Air Conditioner","Door","Warmer","Fan","Computer","Window","Alarm","Heater"};
 	
 	class DataModel extends DefaultListModel{
 		DataModel(int flag){
 			if (flag==1)
-				for (int i=0;i<s.length;i++)
-					addElement(s[i]);
+				for (int i=0;i<Data.devices.length;i++){
+					if (Data.seldevice_index[i]==1){
+						addElement(Data.devices[i]);
+					}
+				}
 		}
 	}
 	
@@ -353,8 +536,9 @@ class DeviceList extends MouseAdapter {
 				index=list.locationToIndex(e.getPoint());
 				Object options[]={"Delete","Cancel"};
 				int val=JOptionPane.showOptionDialog(null,"Choose the operation you want.","Reminder",JOptionPane.DEFAULT_OPTION,JOptionPane.WARNING_MESSAGE,null,options,options[1]);
-				if (val==0)
+				if (val==0){
 					model.removeElementAt(index);
+				}
 				else if (val==1){
 //					System.out.println("Modify");
 //					final JFrame jf1=new DevicesSelected();
@@ -370,15 +554,20 @@ class DeviceList extends MouseAdapter {
 class SpeList extends MouseAdapter {
 	JList list=null;
 	DefaultListModel model=null;
-	String[] s={"IF Fridge.Status==ON THEN Light.Status=OFF.","IF Temperature > 30 THEN Air-Conditioner.status=ON.",
-			"IF Temperature < 20 THEN Air-Conditioner Status=OFF.","IF Door.Status==Open THEN Light.Status=ON.",
-			"IF Smoke THEN Alarm.Status=ON.","1","2","3","4","5"};
+//	String[] s={"IF Fridge.Status==ON THEN Light.Status=OFF.","IF Temperature > 30 THEN Air-Conditioner.status=ON.",
+//			"IF Temperature < 20 THEN Air-Conditioner Status=OFF.","IF Door.Status==Open THEN Light.Status=ON.",
+//			"IF Smoke THEN Alarm.Status=ON.","1","2","3","4","5"};
 	
 	class DataModel extends DefaultListModel{
 		DataModel(int flag){
-			if (flag==1)
-				for (int i=0;i<s.length;i++)
-					addElement(s[i]);
+			if (flag==1){
+				for (int i=0;i<Data.cnt_spe;i++)
+					addElement(Data.setspe_str[i]);
+				if ((Data.cnt_spe==0 && Data.setspe!=Data.setspe_str[0])||(Data.cnt_spe!=0 && Data.setspe!=Data.setspe_str[Data.cnt_spe-1])){
+					addElement(Data.setspe);
+					Data.setspe_str[Data.cnt_spe++]=Data.setspe;
+				}
+			}
 		}
 	}
 	
@@ -446,8 +635,8 @@ class addpanel extends JPanel{
 		constraints.weighty=6;
 //Devices========================================================
 		JLabel devicelabel=new JLabel("Devices");
-		String[] devices={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
-		String[] status={"Brightness","ON","OFF"};
+//		String[] devices={"Air conditioner","Fridge","Light","Fan","Water heater","Warmer"};
+//		String[] status={"Brightness","ON","OFF"};
 
 		JButton button1=new JButton("Add...");
 		button1.addActionListener(new ActionListener(){
@@ -484,11 +673,14 @@ class addpanel extends JPanel{
 			}
 		});
 		
+		
 		JLabel viewlabel=new JLabel("Set Rules");
 		JButton view_rule=new JButton("View");
 		view_rule.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent Event){
+//				Data.setrule_str[Data.cnt]=Data.setrule;
 				RuleList rulelist=new RuleList();
+//				Data.cnt++;
 			}
 		});
 		
@@ -500,7 +692,6 @@ class addpanel extends JPanel{
 		
 //Specification==================================================
 		JLabel specification=new JLabel("Specification");
-//		final JTextField specificationinput=new JTextField(10);
 		JButton button3=new JButton("Add...");
 		button3.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent Event){
@@ -510,7 +701,6 @@ class addpanel extends JPanel{
 			}
 		});
 		add(specification,constraints,0,3,1,1);
-//		add(specificationinput,constraints,1,3,1,1);
 		add(button3,constraints,1,3,1,1);
 		
 		JLabel viewspe=new JLabel("Set Specifications");
@@ -551,16 +741,32 @@ class demopanel extends JPanel{
 		add(c,constraints);
 	}
 
-	String[] s={"IF Fridge.Status On THEN Light.Status Off.","C","C++","C#","Pathon","1","2","3","4","5"};
-	class DataModel extends DefaultListModel{
-		DataModel(int flag){
-			if (flag==1)
-				for (int i=0;i<s.length;i++)
-					addElement(s[i]);
+//	String[] s={"IF Fridge.Status On THEN Light.Status Off.","C","C++","C#","Pathon","1","2","3","4","5"};
+	class DataModel1 extends DefaultListModel{
+		DataModel1(int flag){
+			if (flag==1){
+				if (Data.setrule_str[0]!=null)
+					addElement(Data.setrule_str[0]);
+				for (int i=1;i<Data.cnt_rule;i++)
+					addElement(Data.setrule_str[i]);
+			}
+		}
+	}
+	
+	class DataModel2 extends DefaultListModel{
+		DataModel2(int flag){
+			if (flag==1){
+				if (Data.setspe_str[0]!=null)
+					addElement(Data.setspe_str[0]);
+				for (int i=1;i<Data.cnt_spe;i++)
+					addElement(Data.setspe_str[i]);
+			}
 		}
 	}
 	
 	demopanel(){
+		System.out.println("cnt_rule:"+Data.cnt_rule);
+		System.out.println("cnt_spe:"+Data.cnt_spe);
 		GridBagLayout lay=new GridBagLayout();
 		setLayout(lay);
 //		this.setLayout(null);
@@ -569,17 +775,26 @@ class demopanel extends JPanel{
 		constraints.weightx=2;
 		constraints.weighty=6;
 		
-//		JLabel label1=new JLabel("Rules");
-//		add(label1,constraints,0,0,1,1);
-//		JLabel label2=new JLabel("Specifications");
-//		add(label2,constraints,0,1,1,1);
 		
 		JButton checkbut=new JButton("Check");
 		JButton checkallbut=new JButton("Check All");
 		add(checkbut,constraints,3,1,1,1);
 		add(checkallbut,constraints,3,2,1,1);
 		
-		model1=new DataModel(1);
+		model1=new DataModel1(1);
+		model2=new DataModel2(1);
+		JButton show=new JButton("Show");
+		add(show,constraints,3,0,1,1);
+		show.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				model1=new DataModel1(1);
+				rulelist.setModel(model1);
+				model2=new DataModel2(1);
+				spelist.setModel(model2);
+			}
+		});
+		
+		
 		rulelist=new JList(model1);
 		rulelist.setBorder(BorderFactory.createTitledBorder("Rules"));
 		rulelist.addMouseListener(new MouseAdapter(){
@@ -591,8 +806,6 @@ class demopanel extends JPanel{
 						String tmp=(String)model1.getElementAt(index);
 						selmodel1.addElement(tmp);
 						selrulelist.setModel(selmodel1);
-//						model1.removeElementAt(index);
-//						rulelist.setModel(model1);
 					}
 				}
 			}
@@ -600,7 +813,7 @@ class demopanel extends JPanel{
 		
 		JScrollPane rulesp=new JScrollPane(rulelist);
 		
-		model2=new DataModel(1);
+		
 		spelist=new JList(model2);
 		spelist.setBorder(BorderFactory.createTitledBorder("Specifications"));
 		spelist.addMouseListener(new MouseAdapter(){
@@ -612,13 +825,29 @@ class demopanel extends JPanel{
 						String tmp=(String)model2.getElementAt(index);
 						selmodel2.addElement(tmp);
 						selspelist.setModel(selmodel2);
-//						model2.removeElementAt(index);
-//						spelist.setModel(model2);
 					}
 				}
 			}
 		});
 		
+		checkbut.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.out.println("Selected Rules");
+				for (int i=0;i<selrulelist.getModel().getSize();i++){
+					Data.selrule_str[Data.cnt_sel_rule++]=(String)selrulelist.getModel().getElementAt(i);
+					System.out.println(selrulelist.getModel().getElementAt(i));
+//					System.out.println(Data.selrule_str[i]);
+				}
+				
+				System.out.println('\n'+"Selected Specification");
+				for (int i=0;i<selspelist.getModel().getSize();i++){
+					Data.selspe_str[Data.cnt_sel_spe++]=(String)selspelist.getModel().getElementAt(i);
+					System.out.println(selspelist.getModel().getElementAt(i));
+//					System.out.println(Data.selrule_str[i]);
+				}
+				
+			}
+		});
 		JScrollPane spesp=new JScrollPane(spelist);
 	
 		JSplitPane splitlist=new JSplitPane();
@@ -631,7 +860,7 @@ class demopanel extends JPanel{
 		splitlist.setRightComponent(spesp);
 		add(splitlist,constraints,0,0,2,3);
 		
-		selmodel1=new DataModel(2);
+		selmodel1=new DataModel1(2);
 		selrulelist=new JList(selmodel1);
 		selrulelist.setBorder(BorderFactory.createTitledBorder("Selected Rules"));
 		selrulelist.addMouseListener(new MouseAdapter(){
@@ -648,7 +877,7 @@ class demopanel extends JPanel{
 		});
 		JScrollPane selrulesp=new JScrollPane(selrulelist);
 		
-		selmodel2=new DataModel(2);
+		selmodel2=new DataModel2(2);
 		selspelist=new JList(model2);
 		selspelist.setBorder(BorderFactory.createTitledBorder("Selected Specifications"));
 		selspelist.addMouseListener(new MouseAdapter(){
@@ -689,9 +918,11 @@ class demopanel extends JPanel{
 
 class fixpanel extends JPanel{
 	JButton fixbut;
-	JList sellist;
+	JList selrulelist;
+	JList selspelist;
 	JSplitPane splitpane;
-	DefaultListModel model;
+	DefaultListModel model1;
+	DefaultListModel model2;
 	
 	public void add(Component c,GridBagConstraints constraints,int x,int y,int w,int h){
 		constraints.gridx=x;
@@ -701,12 +932,20 @@ class fixpanel extends JPanel{
 		add(c,constraints);
 	}
 
-	String[] s={"IF Fridge.Status On THEN Light.Status Off.","C","C++","C#","Pathon","1","2","3","4","5"};
-	class DataModel extends DefaultListModel{
-		DataModel(int flag){
+//	String[] s={"IF Fridge.Status On THEN Light.Status Off.","C","C++","C#","Pathon","1","2","3","4","5"};
+	class DataModel1 extends DefaultListModel{
+		DataModel1(int flag){
 			if (flag==1)
-				for (int i=0;i<s.length;i++)
-					addElement(s[i]);
+				for (int i=0;i<Data.cnt_sel_rule;i++)
+					addElement(Data.selrule_str[i]);
+		}
+	}
+	
+	class DataModel2 extends DefaultListModel{
+		DataModel2(int flag){
+			if (flag==1)
+				for (int i=0;i<Data.cnt_spe;i++)
+					addElement(Data.selspe_str[i]);
 		}
 	}
 	
@@ -718,38 +957,66 @@ class fixpanel extends JPanel{
 		constraints.weightx=2;
 		constraints.weighty=6;
 		
-		model=new DataModel(1);
-		sellist=new JList(model);
-		sellist.setBorder(BorderFactory.createTitledBorder("Selected Rules & Specifications"));
-		JScrollPane sel=new JScrollPane(sellist);
+		model1=new DataModel1(1);
+		selrulelist=new JList(model1);
+		selrulelist.setBorder(BorderFactory.createTitledBorder("Selected Rules"));
+		JScrollPane selrule=new JScrollPane(selrulelist);
+		
+		model2=new DataModel2(1);
+		selspelist=new JList(model2);
+		selspelist.setBorder(BorderFactory.createTitledBorder("Selected Specifications"));
+		JScrollPane selspe=new JScrollPane(selspelist);
+		
+		JSplitPane selsplitlist=new JSplitPane();
+		selsplitlist.setOneTouchExpandable(true);
+		selsplitlist.setContinuousLayout(true);
+		selsplitlist.setPreferredSize(new Dimension(500,100));
+		selsplitlist.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		selsplitlist.setDividerLocation(250);
+		selsplitlist.setLeftComponent(selrule);
+		selsplitlist.setRightComponent(selspe);
+		add(selsplitlist,constraints,1,0,4,2);
+		
 		JLabel sellab=new JLabel("Selected Rules & Specifications");
 		add(sellab,constraints,0,0,1,1);
-		add(sel,constraints,2,0,2,2);
-		
-		fixbut=new JButton("Fix");
-		add(fixbut,constraints,1,3,1,1);
+//		add(sel1,constraints,2,0,2,2);
 		
 		JLabel advicelab=new JLabel("Suggestion");
-		add(advicelab,constraints,0,2,1,1);
+		add(advicelab,constraints,0,3,1,1);
 		
-		JTextArea advicetxt=new JTextArea(3,30);
+		JTextArea advicetxt=new JTextArea(2,30);
 		JScrollPane advicesp=new JScrollPane(advicetxt);
-		add(advicesp,constraints,2,2,1,1);
+		add(advicesp,constraints,2,3,1,1);
 		
+		JButton show=new JButton("Show");
+		show.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				model1=new DataModel1(1);
+				selrulelist.setModel(model1);
+				model2=new DataModel2(1);
+				selspelist.setModel(model2);
+			}
+		});
+		add(show,constraints,0,4,1,1);
+		fixbut=new JButton("Fix");
+		add(fixbut,constraints,2,4,1,1);
 		JButton fixagbut=new JButton("Refix");
-		add(fixagbut,constraints,2,3,1,1);
+		add(fixagbut,constraints,4,4,1,1);
 		
 		JLabel label=new JLabel("智能家居安全检验系统");
-		add(label,constraints,3,4,1,1);
+		add(label,constraints,3,5,1,1);
 	}
 }
-public class Menu {
+public class Menu implements ChangeListener{
 	static final int WIDTH=1000;
 	static final int HEIGHT=600;
 	JFrame frame;
 	JMenuBar menubar;
 	JPanel panel;
 	JTabbedPane pane;
+	addpanel addcon;
+	demopanel democon;
+	fixpanel fixcon;
 	public void centered(Container container){
 		Toolkit toolkit=Toolkit.getDefaultToolkit();
 		Dimension screenSize=toolkit.getScreenSize();
@@ -844,9 +1111,9 @@ public class Menu {
 		newitem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent Event){
 //				welcomelabel.setVisible(false);
-				addpanel addcon=new addpanel();
-				demopanel democon=new demopanel();
-				fixpanel fixcon=new fixpanel();
+				addcon=new addpanel();
+				democon=new demopanel();
+				fixcon=new fixpanel();
 				JPanel con=new JPanel();
 				pane.addTab("add",addcon);
 				pane.setEnabledAt(0,true);
@@ -865,14 +1132,46 @@ public class Menu {
 				pane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			}
 		});
-		
+/*		
+		pane.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				for (int i=0;i<pane.getTabCount();i++){
+					Rectangle rect=pane.getBoundsAt(i);
+					if (rect.contains(e.getX(),e.getY())){
+						System.out.println("Changed");
+						System.out.println("cnt_rule"+Data.cnt_rule);
+						for (int j=0;j<Data.cnt_rule;j++){
+							System.out.println(Data.setrule_str[j]);
+						}
+						addcon.repaint();
+//						democon.Repaint();
+						democon=new demopanel();
+						fixcon.repaint();
+					}
+				}
+			}
+		});
+*/
 		frame.setSize(WIDTH,HEIGHT);
 		centered(frame);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	public static void initData(){
+		for (int i=0;i<Data.MAX;i++){
+			Data.seldevice_index[i]=0;
+		}
+	}
+	
 	public static void main(String[] args){
+		initData();
 		Menu menu=new Menu();
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
